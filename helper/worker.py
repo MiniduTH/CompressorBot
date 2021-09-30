@@ -41,7 +41,7 @@ async def screenshot(e):
                     Button.inline("GENERATE SAMPLE", data=f"gsmpl{wah}"),
                     Button.inline("COMPRESS", data=f"sencc{wah}"),
                 ],
-                [Button.inline("SKIP", data=f"skip{wah}")],
+                [Button.inline("SKIP>>", data=f"skip{wah}")],
             ],
         )
         COUNT.remove(e.chat_id)
@@ -79,7 +79,7 @@ async def encc(e):
                 [Button.inline("CANCEL PROCESS", data=f"skip{wah}")],
             ],
         )
-        cmd = f'ffmpeg -i "{dl}" -preset ultrafast -c:v libx265 -crf 27 -map 0:v -c:a aac -map 0:a -c:s copy -map 0:s? "{out}" -y'
+        cmd = f'ffmpeg -i  "{dl}" -map 0 -c:v libx265 -metadata title=HEVCEncodes -pix_fmt yuv420p -preset fast -s 854×480 -crf 29 -b:v 2M -profile:a  aac_he_v2 -c:a libopus -ac 2 -vbr 2 -ab 40k -c:s copy "{out}" -y'
         process = await asyncio.create_subprocess_shell(
             cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
@@ -123,7 +123,7 @@ async def encc(e):
         a1 = await info(dl, e)
         a2 = await info(out, e)
         dk = await ds.reply(
-            f"Original Size : {hbs(org)}\nCompressed Size : {hbs(com)}\nCompressed Percentage : {per}\n\nMediainfo: [Before]({a1})//[After]({a2})\n\nDownloaded in {x}\nCompressed in {xx}\nUploaded in {xxx}",
+            f"●Original Size : {hbs(org)}\n●Compressed Size : {hbs(com)}\n●Compressed Percentage : {per}\n\n●Mediainfo: [Before]({a1})//[After]({a2})\n\n●Downloaded in {x}\n●Compressed in {xx}\n●Uploaded in {xxx}\n\nDone #compress #480p",
             link_preview=False,
         )
         await ds.forward_to(LOG)
@@ -149,7 +149,7 @@ async def sample(e):
             [Button.inline("CANCEL PROCESS", data=f"skip{wah}")],
         ],
     )
-    ncmd = f'ffmpeg -i "{dl}" -preset ultrafast -ss {ss} -to {dd} -c:v libx265 -crf 27 -map 0:v -c:a aac -map 0:a -c:s copy -map 0:s? "{out}" -y'
+    ncmd = f'ffmpeg -i "{dl}" -preset fast -ss {ss} -to {dd} -c:v libx265 -crf 29 -map 0:v -c:a aac -map 0:a -c:s copy -map 0:s? "{out}" -y'
     process = await asyncio.create_subprocess_shell(
         ncmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
     )
@@ -177,10 +177,10 @@ async def sample(e):
             ),
             buttons=[
                 [
-                    Button.inline("SCREENSHOTS", data=f"sshot{wah}"),
-                    Button.inline("COMPRESS", data=f"sencc{wah}"),
+                    Button.inline("🔵SCREENSHOTS🔵", data=f"sshot{wah}"),
+                    Button.inline("🔵COMPRESS🔵", data=f"sencc{wah}"),
                 ],
-                [Button.inline("SKIP", data=f"skip{wah}")],
+                [Button.inline("SKIP>>", data=f"skip{wah}")],
             ],
         )
         COUNT.remove(e.chat_id)
@@ -214,12 +214,12 @@ async def encod(event):
         xxx = await event.reply("`Downloading...`")
         """ For Force Subscribe Channel"""
         # pp = []
-        # async for x in event.client.iter_participants("put group username"):
+        # async for x in event.client.iter_participants("@updatebotz"):
         #    pp.append(x.id)
         # if (user.id) not in pp:
         #    return await xxx.edit(
         #        "U Must Subscribe This Channel To Use This Bot",
-        #       buttons=[Button.url("JOIN CHANNEL", url="put group link")],
+        #       buttons=[Button.url("JOIN CHANNEL", url="https://t.me/updatebotz")],
         #   )
         if len(COUNT) > 4 and user.id != OWNER:
             llink = (await event.client(cl(LOG))).link
@@ -229,7 +229,7 @@ async def encod(event):
             )
         if user.id in COUNT and user.id != OWNER:
             return await xxx.edit(
-                "Already Your 1 Request Processing\nKindly Wait For it to Finish"
+                "Already Your 1 Request Processing\nKindly Send Another Video After Download This."
             )
         COUNT.append(user.id)
         s = dt.now()
@@ -286,7 +286,7 @@ async def encod(event):
         rr = f"encode/{user.id}"
         if not os.path.isdir(rr):
             os.mkdir(rr)
-        bb = kk.replace(f".{aa}", " compressed.mkv")
+        bb = kk.replace(f".{aa}", " [HEVC].mkv")
         out = f"{rr}/{bb}"
         thum = "thumb.jpg"
         dtime = ts(int((es - s).seconds) * 1000)
@@ -297,14 +297,14 @@ async def encod(event):
         COUNT.remove(user.id)
         await event.client.send_message(
             event.chat_id,
-            f"🐠DOWNLODING COMPLETED!!🐠",
+            f"📥DOWNLODING COMPLETED!!📥",
             buttons=[
                 [
-                    Button.inline("GENERATE SAMPLE", data=f"gsmpl{key}"),
-                    Button.inline("SCREENSHOTS", data=f"sshot{key}"),
+                    Button.inline("📺GENERATE SAMPLE📺", data=f"gsmpl{key}"),
+                    Button.inline("🖼SCREENSHOTS🖼", data=f"sshot{key}"),
                 ],
-                [Button.url("MEDIAINFO", url=inf)],
-                [Button.inline("COMPRESS", data=f"sencc{key}")],
+                [Button.url("🔍MEDIAINFO🔍", url=inf)],
+                [Button.inline("🟡COMPRESS🟡", data=f"sencc{key}")],
             ],
         )
     except BaseException as er:
@@ -325,7 +325,7 @@ async def customenc(e, key):
             [Button.inline("CANCEL PROCESS", data=f"skip{wah}")],
         ],
     )
-    cmd = f'ffmpeg -i "{dl}" -preset ultrafast -c:v libx265 -crf 27 -map 0:v -c:a aac -map 0:a -c:s copy -map 0:s? "{out}" -y'
+    cmd = f'ffmpeg -i "{dl}" -preset fast -c:v libx265 -crf 29 -map 0:v -c:a aac -map 0:a -c:s copy -map 0:s? "{out}" -y'
     process = await asyncio.create_subprocess_shell(
         cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
     )
@@ -376,7 +376,7 @@ async def customenc(e, key):
     a1 = await info(dl, e)
     a2 = await info(out, e)
     dk = await ds.reply(
-        f"Original Size : {hbs(org)}\nCompressed Size : {hbs(com)}\nCompressed Percentage : {per}\n\nMediainfo: [Before]({a1})//[After]({a2})\n\nDownloaded in {x}\nCompressed in {xx}\nUploaded in {xxx}",
+        f"Original Size : {hbs(org)}\n●Compressed Size : {hbs(com)}\n●Compressed Percentage : {per}\n\n●Mediainfo: [Before]({a1})//[After]({a2})\n\n●Downloaded in {x}\n●Compressed in {xx}\n●Uploaded in {xxx}\n\nDone #compress  #480p",
         link_preview=False,
     )
     await ds.forward_to(LOG)
